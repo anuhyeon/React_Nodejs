@@ -1,0 +1,74 @@
+/* 전체 폼의 스타일 */
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 8px;
+    background: #f8f9fa;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    width: 300px;
+    margin: 40px auto;
+  }
+  
+  /* 각 입력 그룹을 위한 스타일 */
+  .form-group {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  /* 라벨 스타일 */
+  label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 14px;
+  }
+  
+  /* 입력란 스타일 */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  /* 버튼 스타일 */
+  button {
+    padding: 10px 20px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* ID 중복 확인 버튼 스타일 */
+  .check-id-button {
+    padding: 5px 10px;
+    margin-left: 10px;
+    font-size: 14px;
+    background-color: #6c757d;
+  }
+  
+  .check-id-button:hover {
+    background-color: #5a6268;
+  }
+  
+  /* 중복 검사 결과 스타일 */
+  .id-check-result {
+    font-size: 14px;
+    color: green;
+    margin-left: 10px;
+  }
+  

@@ -15,14 +15,14 @@ const cors = require('cors');
 //DB 임포트
 const db = require('./database/db');
 
-
 // 컨트롤러 폴더에서 index.js 임포트
 const {
     login,
     accessToken,
     refreshToken,
     loginSuccess,
-    logout } = require('./controller') // 컨트롤러디렉토리안에 index.js라고 'index'라는 이름을 사용하게 되면, 해당 폴더까지만 써줘도 임포트 됨.
+    logout,
+    signup } = require('./controller') // 컨트롤러디렉토리안에 index.js라고 'index'라는 이름을 사용하게 되면, 해당 폴더까지만 써줘도 임포트 됨.
 
 const app = express();
 dotenv.config();
@@ -59,7 +59,7 @@ app.get('/login/success', loginSuccess) // 로그인이 성공을 했을 때 사
 app.post('/logout', logout) // 로그아웃을 진행을 하여 현재 쿠키에 담겨있는 accesstoken을 제거하는 역할을 담당.
 
 //회원가입 관련기능
-app.post('/singup',signup) // 회원가입 요청 기능
+app.post('/signup',signup) // 회원가입 요청 기능
 
 app.listen(process.env.PORT, () =>{
     console.log(`server is on ${process.env.PORT}`);

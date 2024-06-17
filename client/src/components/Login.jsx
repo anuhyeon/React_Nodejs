@@ -23,6 +23,10 @@ export default function Login({ setIsLogin, setUser }) {
     });
   };
 
+  // const toSignUpPage = () => {
+  //  return (<SignUpForm />);
+  // };
+
   return (
     <div>
       <div className="loginContainer">
@@ -46,7 +50,9 @@ export default function Login({ setIsLogin, setUser }) {
             value={password}
           />
         </div>
+        {/* <button onClick={toSignUpPage} className="signupButton">signup</button> */}
         <button onClick={login} className="loginButton">Login</button>
+        
       </div>
     </div>
   );

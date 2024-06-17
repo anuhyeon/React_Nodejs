@@ -3,10 +3,12 @@ import "./App.css";
 import axios from "axios";
 import Login from "./components/Login";
 import { useEffect, useState } from "react";
+import SignUpForm from "./components/SignUpForm";
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
   const [user, setUser] = useState({});
+  const [showSignUpForm, setShowSignUpForm] = useState(false); // 회원가입 폼 표시 상태
 
   const accessToken = () => {
     axios({
@@ -35,6 +37,8 @@ function App() {
       }
     });
   };
+
+ 
 
   useEffect(() => {
     try {
@@ -69,16 +73,29 @@ function App() {
           get Refresh Token
         </a>
        
+        
         {isLogin ? (
           <>
-            <h3>{user.username} 님이 로그인했습니다.</h3>
+            <h3>{user.name} 님이 로그인했습니다.</h3>
             <button onClick={logout} className="loginButton">
               Logout
             </button>
+            <button onClick={() => setShowSignUpForm(false)} className="signUpButton">
+              Hide SignUp
+            </button>
           </>
+        ) : showSignUpForm ? (
+          <SignUpForm />
         ) : (
-          <Login setUser={setUser} setIsLogin={setIsLogin} />
+          <>
+            <Login setUser={setUser} setIsLogin={setIsLogin} />
+            <button onClick={() => setShowSignUpForm(true)} className="signUpButton">
+              SignUp
+            </button>
+          </>
         )}
+          
+
       </header>
     </div>
   );

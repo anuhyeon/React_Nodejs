@@ -19,27 +19,7 @@ function SignUpForm() {
     alert("사용가능한 ID 입니다.");
   };
 
-  //회원가입 Api
-  // const signUp = () => {
-  //   axios({
-  //     url: "http://localhost:8123/signup",
-  //     method: "POST",
-  //     withCredentials: true,
-  //     data: {
-  //       username: username,
-  //       email: email,
-  //       id: id,
-  //       password: password,
-  //     },
-  //   }).then((result) => {
-  //     if (result.status === 200) {
-  //       alert("회원가입이 완료되었습니다.");
-  //       window.open('/', '_self')
-  //     }
-  //   });
-  // };
-
-
+ 
   // 폼 제출 핸들러 a
   const handleSubmit = (event) => {
     event.preventDefault();

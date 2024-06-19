@@ -8,7 +8,7 @@ function PostDetail() {
   const [post, setPost] = useState(null);
   const [comments, setComments] = useState([]);
   const [commentContent, setCommentContent] = useState('');
-  const [user, setUser] = useState({ name: '개똥이', userID: 'ddong' }); // 사용자 정보 예시
+  //const [user, setUser] = useState({ name: '개똥이', userID: 'ddong' }); // 사용자 정보 예시
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -30,7 +30,6 @@ function PostDetail() {
     e.preventDefault();
     await axios.post(`http://localhost:8123/posts/${id}/comments`, {
       postidx: id,
-      userID: user.userID,
       content: commentContent,
     }, { withCredentials: true });
 
@@ -41,7 +40,7 @@ function PostDetail() {
   };
 
   if (!post) return <div>Loading...</div>;
-
+  console.log(post.img_url)
   return (
     <div className="parent">
       <div className="post-detail">
@@ -49,6 +48,8 @@ function PostDetail() {
         <p>{post.contents}</p>
         <p>작성자: {post.userID}</p>
         <p>작성일: {post.regdate}</p>
+        {post.img_url && <img src={post.img_url} alt="Post image" className="post-image" />} {/* 이미지가 있는 경우 렌더링 */}
+
       </div>
       <div className="comments-section">
         <h2>댓글</h2>

@@ -34,27 +34,15 @@ function PostCreate() {
     if (image) {
       formData.append('image', image);
     }
-    // FormData의 key 확인
-    // @ts-ignore
-    // console.log('adsadf')
-    // for (const key of formData.keys()) {
-    //   console.log(key);
-    // }
-    // // FormData의 value 확인
-    // // @ts-ignore
-    // console.log('adsadf')
-    // for (const value of formData.values()) {
-    //   console.log(value);
-    // }
-    //console.log(formData);
-
+    
+    
     try {
-      await axios.post('http://localhost:8123/postcreate', {title,content}, {
+      await axios.post('http://localhost:8123/postcreate', formData , {
         withCredentials: true,
-        // headers: {
-        //   //'Accept': 'application/json',
-        //   // 'Content-Type': 'multipart/form-data'
-        // }
+        headers: {
+          //'Accept': 'application/json',
+           'Content-Type': 'multipart/form-data'
+        }
       });
       alert('게시물이 등록되었습니다!');
       setTitle('');
@@ -119,3 +107,17 @@ export default PostCreate;
 //onSubmit={handleSubmit} 코드는 HTML <form> 태그에서 사용되는 이벤트 핸들러임. 
 // 해당 핸들러는 사용자가 폼을 제출할 때 , 즉 submit버튼(type='submit')을 클릭할 경우 호출되는 함수를 지정.
 // 여기서 handleSubmit은 해당 폼의 제출이벤트를 처리하기 위한 함수이다. 이 함수는 데이터를 수정하여 서버로 전송하는 등의 작업을 수행.
+// FormData의 key 확인
+    // @ts-ignore
+    // console.log('adsadf')
+    // for (const key of formData.keys()) {
+    //   console.log(key);
+    // }
+    // // FormData의 value 확인
+    // // @ts-ignore
+    // console.log('adsadf')
+    // for (const value of formData.values()) {
+    //   console.log(value);
+    // }
+    //console.log(formData);
+    //{title,content}

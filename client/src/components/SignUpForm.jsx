@@ -21,8 +21,8 @@ function SignUpForm() {
 
  
   // 폼 제출 핸들러 a
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (password !== confirmPassword) {
       alert("비밀번호가 맞지 않습니다.");
       return;
@@ -56,8 +56,9 @@ function SignUpForm() {
       <div>
         <label htmlFor="username">Username:</label>
         <input
-          type="text"
+          type="text1"
           id="username"
+          className="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           required
@@ -76,8 +77,9 @@ function SignUpForm() {
       <div>
         <label htmlFor="id">ID:</label>
         <input
-          type="text"
+          type="text1"
           id="id"
+          className="id"
           value={id}
           onChange={(e) => setId(e.target.value)}
           required

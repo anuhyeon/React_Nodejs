@@ -3,6 +3,7 @@ const userDatabase = require("../database/db") //../경로에서 Database.js를 
 const jwt = require("jsonwebtoken") //우리가 npm으로 설치한 jsonwebtoken모듈을 임포트
 
 
+
 //5개 api 함수 정의
 const login = (req,res) => {  // 이함수의 작업을 미들웨어라고 보면됨.
     const {email,password} = req.body; // post 요청은 query가 아니라 body를 사용!
@@ -25,17 +26,18 @@ const login = (req,res) => {  // 이함수의 작업을 미들웨어라고 보�
             return res.status(404).json("User not found");
         }
         const userInfo = rows[0]; // 쿼리 결과에서 첫 번째 행을 userInfo로 설정
-        //console.log(userInfo);  // 쿼리 결과 로깅
+        console.log('aaaa');
+        console.log(userInfo);  // 쿼리 결과 로깅
 
         //console.log(userInfo);
     try{
         //access Token 발급
         const accessToken = jwt.sign({
-            id : userInfo.id,
-            username : userInfo.username,
+            id : userInfo.userID,
+            username : userInfo.name,
             email : userInfo.email,
         },process.env.ACCESS_SECRET,{
-            expiresIn : '1m',   
+            expiresIn : '30m',   
             issuer : 'About Tech'
         }) 
         //sign함수에는 3가지의 인자를 전달받음.
@@ -45,8 +47,8 @@ const login = (req,res) => {  // 이함수의 작업을 미들웨어라고 보�
         
         // refresh Token 발급
         const refreshToken = jwt.sign({
-            id : userInfo.id,
-            username : userInfo.username,
+            id : userInfo.userID,
+            username : userInfo.name,
             email : userInfo.email,
         },process.env.REFRESH_SECRET,{
             expiresIn : '24h',   
@@ -73,7 +75,6 @@ const login = (req,res) => {  // 이함수의 작업을 미들웨어라고 보�
     });
     
     //console.log(userInfo);
-    console.log('adfadfadfs');
 
     //next(); // 다음 코드 줄에 있는 미들웨어로 넘어감.
 
@@ -81,7 +82,6 @@ const login = (req,res) => {  // 이함수의 작업을 미들웨어라고 보�
 //get access Token이라는 버튼을 클릭했을때 해당 accessToken을 가지고 사용자를 어떻게 특정할 수 있는지를 확인하는 함수
 const accessToken = (req,res) => {
     try{
-        console.log('ㅁㅇㅁㅇㅇㄴ');
 
         const token = req.cookies.accessToken; // 클라이언트가 요청보낸 쿠키안의 토큰을 꺼내서 저장
         const data = jwt.verify(token, process.env.ACCESS_SECRET); //HS256알고리즘(default)으로 accessToken을 decoding하여 데이터를 저장
@@ -93,7 +93,6 @@ const accessToken = (req,res) => {
         // 이메일을 기준으로 사용자 정보 조회
         // SELECT * FROM users는 users 테이블에서 모든 컬럼을 선택한다는 것을 의미하고, WHERE email = ?는 이메일 주소가 특정 값과 일치하는 행을 필터링하라는 조건
         //query 메서드의 두 번째 인자 [data.email]는 쿼리에 바인딩될 파라미터들의 배열입니다. 여기서 물음표 ?는 이 위치에 data.email 값이 안전하게 삽입되어 SQL 쿼리를 실행하게 됨.
-        console.log('ㅁㅇㅁㅇㅇㄴ');
         var sql = `SELECT * FROM userdata WHERE email = '${data.email}'`
         userDatabase.query(sql,(err,rows)=>{
             if (err) {
@@ -109,10 +108,12 @@ const accessToken = (req,res) => {
             const { password , ...others} = userData; // 개발자도구 network통신 내용에서 accestoken안에 password가 노출되는 것을 방지하기 위해 password를 가려주는 작업.
             res.status(200).json(others); // password만 제거된 나머지 정보만 전달.
             // res.status(200).json(userData); // 위 작업이 성공했을 경우 클라이언트에게 보내는 status코드는 200 그리고 userData를 json파일로 파싱해서 보냄.
+            console.log('accessToken발급완료');
+
         });
        
-    } catch (error){
-        res.status(500).json(error);
+    } catch (error){ // 클라이언트가 토큰을 가지고 있지 않을 경우
+        res.status(700).json(error);
     }
 }
 
@@ -139,11 +140,11 @@ const refreshToken = (req,res) => {
 
             //accessToken 새로 발급
             const accessToken = jwt.sign({
-            id : userData.id,
-            username : userData.username,
+            id : userData.userID,
+            username : userData.name,
             email : userData.email,
             },process.env.ACCESS_SECRET,{
-            expiresIn : '1m',   
+            expiresIn : '30m',   
             issuer : 'About Tech'
             });
             //token 전송
@@ -225,55 +226,103 @@ const signup = (req,res) => {
     }
 }
 
+const posts = (req,res) => {
+    try{
+        var sql = `SELECT idx,title,userID,regdate FROM postsdata ORDER BY regdate DESC LIMIT 10` //regdate를 기준으로 최신순으로 정렬 DESC는 내림차순을 의미하므로 가장 최근의 데이터가 먼저 나옴 인덱스 1번
+        userDatabase.query(sql,(err,rows)=>{
+            if (err) {
+                console.error(err);
+                return res.status(500).send(err);
+            }
+            res.json(rows)
+        })
+    }catch(err){
+        res.status(500).send(err);
+    }
+}
+const postcreate = (req,res) => {
+    try{
+        const token = req.cookies.accessToken; // 클라이언트가 요청보낸 쿠키안의 토큰을 꺼내서 저장
+        const data = jwt.verify(token, process.env.ACCESS_SECRET);
+        console.log(data)
+        const title = req.body.title;
+        const content = req.body.content;
+        var sql = `INSERT INTO postsdata(title,userID,contents,regdate) VALUES('${title}','${data.id}','${content}',now())`
+        //console.log(req.body)
+        userDatabase.query(sql,(err,rows)=>{
+            if (err){
+                console.log(err);
+                return res.status(500).send(err);
+            }
+            res.status(200).send("create success!")
+        })
 
-//회원가입 정보 입력
-exports.insert = ( data, cb ) => {
-    var sql = `INSERT INTO user VALUES ('${data.id}', '${data.name}', '${data.email}', '${data.phoneNumber}','${data.password}');`;
-
-    cnn.query(sql, (err, rows) => {
-        if ( err ) throw err;
-        cb( data.id );
-    });
+    }catch(err){
+        res.status(500).send(err);
+    }
 }
 
-//로그인 정보 읽기
-exports.select = ( id, password, cb ) => {
-    var sql = `SELECT * FROM user WHERE id='${id}' limit 1`;
-
-    cnn.query(sql, (err, rows) => {
-        if ( err ) throw err;
-        cb( rows[0] );
+const postdetails = (req,res) => {
+    try{
+        const { idx } = req.params;
+        const sql = `SELECT title, userID, contents, regdate FROM postsdata WHERE idx = ?`;
+    userDatabase.query(sql, [idx], (error, results) => {
+    if (error) {  
+      return res.status(500).send(err);
+    }
+    if (results.length === 0) {
+      return res.status(404).send('Post not found');
+    }
+    res.json(results[0])
     });
+    }catch(err){
+        res.status(500).send(err);
+
+    }
 }
 
-//회원 정보
-exports.get_user = (id, cb) => {
-    let sql = `SELECT * FROM user WHERE id='${id}' limit 1;`;
-  
-    cnn.query( sql, function(err, rows){
-        if ( err ) throw err;
-        cb(rows);
-    });
+const commentcreate = (req,res) => {
+    try{
+        const { idx } = req.params; // app.post('/posts/:idx/comments',authenticateToken,commentcreate) 여기서 ':' 뒤의 변수 이름이랑 같아야함!!!
+        const token = req.cookies.accessToken; // 클라이언트가 요청보낸 쿠키안의 토큰을 꺼내서 저장
+        const data = jwt.verify(token, process.env.ACCESS_SECRET);
+        //console.log(typeof idx)
+        //let pageidx = parseInt(idx, 10); //10진수로 형변환
+        //console.log(typeof pageidx)
+
+        const userID = req.body.userID;
+        const content = req.body.content;
+        var sql = `INSERT INTO commentsdata(userID,comment,regdate,postidx) VALUES('${data.id}','${content}',now(),'${idx}')`
+        //console.log(req.body)
+        userDatabase.query(sql,(err,rows)=>{
+            if (err){
+                console.log(err);
+                return res.status(500).send(err);
+            }
+            res.status(200).send("create comment success!")
+        })
+
+    }catch(err){
+        res.status(500).send(err);
+    }
 }
 
-//회원 정보 수정
-exports.update = ( data,  cb ) => {
-    var sql = `UPDATE user SET name='${data.name}', email='${data.email}', phoneNumber='${data.phoneNumber}', password='${data.password}' WHERE id='${data.id}';`;
+const commentlist = (req,res) => {
+    try{
+        const { idx } = req.params; 
+        const sql = `SELECT * FROM commentsdata WHERE postidx = ?`
+        userDatabase.query(sql,[idx],(err,rows)=>{
+            if (err){
+                console.log(err);
+                return res.status(500).send(err);
+            }
+            res.json(rows)
+        });
 
-    cnn.query(sql, (err, rows) => {
-        if ( err ) throw err;
-        cb( rows );
-    });
-}
+    }catch(err){
+        res.status(500).send(err);
 
-//회원 탈퇴
-exports.delete = ( id,  cb ) => {
-    var sql = `DELETE FROM user WHERE id='${id}';`;
-  
-    cnn.query(sql, (err, rows) => {
-        if ( err ) throw err;
-        cb( rows );
-    });
+    }
 }
 
  
@@ -284,5 +333,10 @@ module.exports = {
     refreshToken,
     loginSuccess,
     logout,
-    signup
+    signup,
+    posts,
+    postcreate,
+    postdetails,
+    commentcreate,
+    commentlist
 }

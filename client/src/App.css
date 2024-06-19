@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #413c37;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -50,7 +50,7 @@
 .loginButton{
     width: 200px !important;
     border-radius: 10px;
-    background-color: #61fbda;
+    background-color: #5e4a2b;
     font-weight: bold;
 }
 

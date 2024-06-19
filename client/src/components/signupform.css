@@ -43,8 +43,11 @@ form {
     border-radius: 4px;
     font-size: 16px;
   }
+  .signup-button{
+    color:rgb(78, 61, 61);
+  }
   
-  /* 버튼 스타일 */
+  /* 버튼 스타일
   button {
     padding: 10px 20px;
     color: white;
@@ -54,11 +57,11 @@ form {
     cursor: pointer;
     font-size: 16px;
     text-transform: uppercase;
-  }
+  } */
   
-  button:hover {
+  /* button:hover {
     background-color: #0056b3;
-  }
+  } */
   
   /* ID 중복 확인 버튼 스타일 */
   .check-id-button {

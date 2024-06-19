@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-//import './SignUpForm.css'; // CSS 파일 경로는 실제 파일 위치에 맞게 조정
+//import './signupform.css'; // CSS 파일 경로는 실제 파일 위치에 맞게 조정
 import axios from "axios";
 
 
@@ -54,7 +54,7 @@ function SignUpForm() {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label htmlFor="username">Username:</label>
+        <label htmlFor="username">이름:</label>
         <input
           type="text1"
           id="username"
@@ -65,7 +65,7 @@ function SignUpForm() {
         />
       </div>
       <div>
-        <label htmlFor="email">Email:</label>
+        <label htmlFor="email">이메일:</label>
         <input
           type="email"
           id="email"
@@ -85,7 +85,7 @@ function SignUpForm() {
           required
         />
         <button type="button" onClick={checkId}>Check ID</button>
-        <span>{idCheck ? "Available" : ""}</span>
+        <span>{idCheck ? "사용 가능" : ""}</span>
       </div>
       <div>
         <label htmlFor="password">Password:</label>
@@ -98,7 +98,7 @@ function SignUpForm() {
         />
       </div>
       <div>
-        <label htmlFor="confirmPassword">Confirm Password:</label>
+        <label htmlFor="confirmPassword">Password 확인:</label>
         <input
           type="password"
           id="confirmPassword"
@@ -107,8 +107,11 @@ function SignUpForm() {
           required
         />
       </div>
-      <button type="submit">Sign Up</button>
-      <button onClick={()=>window.open("/", "_self")}>Back</button>
+      <div>
+      <button className="signup-button" type="submit">Sign Up</button>
+      <br></br>
+      <button className="signup-back-button" onClick={()=>window.open("/", "_self")}>Back</button>
+      </div>
     </form>
     
   );

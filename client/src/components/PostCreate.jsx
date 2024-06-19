@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import './PostCreate.css';
 import { useNavigate } from 'react-router-dom';
@@ -9,9 +9,20 @@ function PostCreate() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [image, setImage] = useState(null);
-  const user = { name: '개똥이', email: 'ddong@email.com' };
+  const [user,setUser] = useState([]);
   const navigate = useNavigate();
 
+  useEffect(()=>{
+    const fetchUserInfo = async () => {
+      const result = await axios.get('http://localhost:8123/posts',{withCredentials : true});
+      setUser({
+        name: result.data.name, // 서버에서 받아온 사용자 ID를 이름으로 설정
+        email: result.data.email // 서버에서 받아온 이메일을 설정
+      });
+    }
+    fetchUserInfo();
+
+  },[])
 
   const handleSubmit = async (e) => {
     e.preventDefault();

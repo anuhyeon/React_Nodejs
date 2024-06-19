@@ -228,13 +228,19 @@ const signup = (req,res) => {
 
 const posts = (req,res) => {
     try{
+        const token = req.cookies.accessToken; // 클라이언트가 요청보낸 쿠키안의 토큰을 꺼내서 저장
+        const data = jwt.verify(token, process.env.ACCESS_SECRET);
         var sql = `SELECT idx,title,userID,regdate FROM postsdata ORDER BY regdate DESC LIMIT 10` //regdate를 기준으로 최신순으로 정렬 DESC는 내림차순을 의미하므로 가장 최근의 데이터가 먼저 나옴 인덱스 1번
         userDatabase.query(sql,(err,rows)=>{
             if (err) {
                 console.error(err);
                 return res.status(500).send(err);
             }
-            res.json(rows)
+            res.json({
+                name: data.username,
+                email: data.email,
+                post: rows
+            });
         })
     }catch(err){
         res.status(500).send(err);

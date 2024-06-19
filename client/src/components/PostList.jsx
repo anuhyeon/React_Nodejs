@@ -15,13 +15,17 @@ function PostList() {
   useEffect(() => {
     const fetchPosts = async () => {
       const result = await axios.get('http://localhost:8123/posts',{withCredentials : true});
-      setPosts(result.data);
-      //setUser()
+      console.log(result);
+      setPosts(result.data.post);
+      setUser({
+        name: result.data.name, // 서버에서 받아온 사용자 ID를 이름으로 설정
+        email: result.data.email // 서버에서 받아온 이메일을 설정
+      });
     };
     fetchPosts();
   }, []);
 
-  console.log(posts); // 이 부분은 렌더링될 때마다 실행됨.
+  //console.log(posts); // 이 부분은 렌더링될 때마다 실행됨.
 
   const navigate = useNavigate();
   const toPostCreate = ()=>{

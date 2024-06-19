@@ -20,6 +20,17 @@
     line-height: 1.6;
     color: #f6f8f8;
   }
+
+  .post-image {
+  width: 100%; /* 이미지를 컨테이너의 너비에 맞춤 */
+  max-width: 600px; /* 최대 너비 설정 */
+  height: auto; /* 비율 유지 */
+  margin-top: 20px;
+  border-radius: 10px;
+  display: block; /* 중앙 정렬을 위한 블록 요소로 설정 */
+  margin-left: auto; /* 중앙 정렬 */
+  margin-right: auto; /* 중앙 정렬 */
+}
   
   .comments-section {
     margin-top: 40px;

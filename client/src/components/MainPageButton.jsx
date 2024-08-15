@@ -11,7 +11,7 @@ function MainPageButton() {
 
   return (
     <button onClick={mainPage} className="mainPageButton">
-      메인 페이지 ㄱ
+      메인 페이지로 이동
     </button>
   );
 }

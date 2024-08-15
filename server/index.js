@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const jwt = require("jsonwebtoken") //우리가 npm으로 설치한 jsonwebtoken모듈을 임포트
+const s3uploader = require('./s3upload'); // s3Uploader.js 파일 임포트
 
 //\\ 서버사이드렌더링 템플릿 엔진
 // const ejs = require('ejs');
@@ -50,10 +51,10 @@ app.use(cors({
 // app.get('/',(req,res)=>{
 //     res.sendFile('./build/index.html')
 // })
-// app.use(express.static('../client/build'))
-// app.get('/', (req, res) => {
-//     res.sendFile('index.html')
-// })
+app.use(express.static('../client/build'))
+app.get('/', (req, res) => {
+    res.sendFile('index.html')
+})
 
 // 토큰 검증 미들웨어 항상 요청 받을때마다 함수인자로 넣어줄 것
 const authenticateToken = (req, res, next) => { // 토큰 유효성 검사, 검사
@@ -69,9 +70,9 @@ const authenticateToken = (req, res, next) => { // 토큰 유효성 검사, 검�
 };
 
 
-app.get('/',(req,res)=>{
-    res.send('<h1>여기는 서버입니다다다다다다 ui 보고싶으면 포트 3000으로 ㄱ</h1>')
-})
+// app.get('/',(req,res)=>{
+//     res.send('<h1>여기는 서버입니다다다다다다 ui 보고싶으면 포트 3000으로 ㄱ</h1>')
+// })
 
 // 로그인 관련 기능
 app.post('/login',login ) // 로그인 요청 기능
@@ -84,7 +85,7 @@ app.post('/logout', logout) // 로그아웃을 진행을 하여 현재 쿠키에
 app.post('/signup',signup) // 회원가입 요청 기능
 
 //게시판 관련 기능
-app.post('/postcreate',authenticateToken,postcreate) // 게시물 등록 api
+app.post('/postcreate',authenticateToken,s3uploader.single('image'),postcreate) // 게시물 등록 api
 app.get('/posts/:idx',authenticateToken,postdetails) //게시물 보기 api
 app.get('/posts',authenticateToken,posts) //게시물 목록 보기 api
 app.post('/posts/:idx/comments',authenticateToken,commentcreate) // 댓글 등록 api

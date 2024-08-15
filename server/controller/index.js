@@ -250,10 +250,21 @@ const postcreate = (req,res) => {
     try{
         const token = req.cookies.accessToken; // 클라이언트가 요청보낸 쿠키안의 토큰을 꺼내서 저장
         const data = jwt.verify(token, process.env.ACCESS_SECRET);
-        console.log(data)
+        
+        console.log(req.file);
+        if(!req.file){
+            return res.status(400).send('No file uploaded.');
+        }
+
+        console.log('#######s3image uploadetest postcreat######');
+        console.log(req.file);
+        // console.log(req.body.title);
+        // console.log(req.body.content);
+        // console.log(req.file.location);
+        const img_src = req.file.location
         const title = req.body.title;
         const content = req.body.content;
-        var sql = `INSERT INTO postsdata(title,userID,contents,regdate) VALUES('${title}','${data.id}','${content}',now())`
+        var sql = `INSERT INTO postsdata(title,userID,contents,img_url,regdate) VALUES('${title}','${data.id}','${content}','${img_src}',now())`
         //console.log(req.body)
         userDatabase.query(sql,(err,rows)=>{
             if (err){
@@ -271,7 +282,7 @@ const postcreate = (req,res) => {
 const postdetails = (req,res) => {
     try{
         const { idx } = req.params;
-        const sql = `SELECT title, userID, contents, regdate FROM postsdata WHERE idx = ?`;
+        const sql = `SELECT title, userID, contents, img_url, regdate FROM postsdata WHERE idx = ?`;
     userDatabase.query(sql, [idx], (error, results) => {
     if (error) {  
       return res.status(500).send(err);
